@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/visit-faskis/static/css/main.022fef92.css",
+    "main.js": "/visit-faskis/static/js/main.d0a423ec.js",
+    "static/js/453.86f04430.chunk.js": "/visit-faskis/static/js/453.86f04430.chunk.js",
+    "index.html": "/visit-faskis/index.html",
+    "main.022fef92.css.map": "/visit-faskis/static/css/main.022fef92.css.map",
+    "main.d0a423ec.js.map": "/visit-faskis/static/js/main.d0a423ec.js.map",
+    "453.86f04430.chunk.js.map": "/visit-faskis/static/js/453.86f04430.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.022fef92.css",
+    "static/js/main.d0a423ec.js"
+  ]
+}
