@@ -1,0 +1,78 @@
+  import React, { useEffect } from 'react';
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+  import londonNeighborhoods from '../data/rewound-geojson.json'; // Assuming the GeoJSON is stored locally
+
+  const Map = () => {
+    useEffect(() => {
+      // Initialize the map and set its view to London
+      const map = L.map('map').setView([51.505, -0.09], 10);
+
+      // Add the OpenStreetMap tile layer
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      // Function to check if a neighborhood has been visited (stored in local storage)
+      const isNeighborhoodVisited = (neighborhoodName) => {
+        const visited = JSON.parse(localStorage.getItem('visitedNeighborhoods')) || [];
+        return visited.includes(neighborhoodName);
+      };
+
+      // Function to mark a neighborhood as visited
+      const markNeighborhoodVisited = (neighborhoodName) => {
+        const visited = JSON.parse(localStorage.getItem('visitedNeighborhoods')) || [];
+        visited.push(neighborhoodName);
+        localStorage.setItem('visitedNeighborhoods', JSON.stringify(visited));
+      };
+
+      // Function to unmark a neighborhood as visited
+      const unmarkNeighborhoodVisited = (neighborhoodName) => {
+        const visited = JSON.parse(localStorage.getItem('visitedNeighborhoods')) || [];
+        const index = visited.indexOf(neighborhoodName);
+        if (index > -1) {
+          visited.splice(index, 1);
+        }
+        localStorage.setItem('visitedNeighborhoods', JSON.stringify(visited));
+      };
+
+      // Load the GeoJSON data for the neighborhoods
+      const neighborhoodsLayer = L.geoJSON(londonNeighborhoods, {
+        style: (feature) => ({
+          color: 'blue',
+          weight: 2,
+          fillColor: isNeighborhoodVisited(feature.properties.neighborhood) ? 'green' : 'lightblue',
+          fillOpacity: 0.5
+        }),
+        onEachFeature: (feature, layer) => {
+          const neighborhoodName = feature.properties.hoods;
+
+          // Add a click event listener for marking/unmarking visited neighborhoods
+          layer.on('click', () => {
+            if (isNeighborhoodVisited(neighborhoodName)) {
+              unmarkNeighborhoodVisited(neighborhoodName);
+              layer.setStyle({ fillColor: 'lightblue' });
+            } else {
+              markNeighborhoodVisited(neighborhoodName);
+              layer.setStyle({ fillColor: 'green' });
+            }
+          });
+
+          // Add a tooltip to show the neighborhood name
+          layer.bindTooltip(neighborhoodName, { permanent: false });
+        }
+      }).addTo(map);
+
+      return () => {
+        map.remove(); // Cleanup map on component unmount
+      };
+    }, []);
+
+    return (
+      <div id="map" style={{ height: '600px', width: '100%' }}>
+        {/* The map will be rendered in this div */}
+      </div>
+    );
+  };
+
+  export default Map;
