@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 const App = () => {
   return (
     <div>
-      <h1>London Neighborhoods Map</h1>
+      <h1>VISIT FASKIS!</h1>
       <Map />
     </div>
   );
